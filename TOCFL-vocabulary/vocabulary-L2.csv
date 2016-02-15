@@ -1,0 +1,499 @@
+任務領域,詞彙,漢語拼音,詞類
+個人資料,出生,chūshēng ,Vp
+,國,guó ,N
+,不同,bùtóng ,Vs
+,地址,dìzhǐ,N
+,市,shì,N
+,傳真,chuánzhēn ,N
+,留言,liú​yán,Vi
+,日期,rìqí ,N
+,時間,shíjiān ,N
+,鐘頭,zhōngtóu ,N
+,晚,wǎn ,N
+,夜,yè ,N
+,禮拜,lǐbài ,N
+,禮拜天,lǐbàitiān ,N
+,前天,qiántiān ,N
+,後天,hòutiān ,N
+,從前,cóngqián ,N
+,夏,xià ,N
+,冬,dōng ,N
+,秋,qiū ,N
+,春,chūn ,N
+,一會兒,yīhuǐér ,N
+,不久,bùjiǔ ,N
+,剛剛,gānggāng ,Adv
+,剛才,gāngcái ,Adv
+,當然,dāngrán ,Adv
+,自己,zìjǐ ,N
+,別人,biérén ,N
+,年紀,niánjì ,N
+,男人,nánrén ,N
+,女人,nǚrén ,N
+,大人,dàrén ,N
+,老人,lǎorén ,N
+,習慣,xíguàn ,N
+,習慣 ,xíguàn ,Vs
+,家庭,jiātíng ,N
+,父親,fùqīn ,N
+,母親,mǔqīn ,N
+,父母,fùmŭ ,N
+,爺爺,yéye,N
+,奶奶,nǎinai ,N
+,關係,guānxì ,N
+,教堂,jiàotáng ,N
+,好 ,hǎo ,Vs
+,真 ,zhēn ,Vs
+,最,zuì ,Adv
+,更,gèng ,Adv
+,愉快,yúkuài ,Vs
+,開心,kāixīn ,Vs
+,著急,zhāojí ,Vs
+,擔心,dānxīn ,Vst
+,生氣,shēngqì ,Vs-sep
+,怕,pà ,Vst
+,哭,kū ,Vi
+,難過,nánguò ,Vs
+,傷心,shāngxīn ,Vs-sep
+,美,měi ,Vs
+,美麗,měilì ,Vs
+,聰明,cōngmíng ,Vs
+,認真,rènzhēn ,Vs
+,勇敢,yŏnggăn ,Vs
+,禮貌,lĭmào ,N
+,害羞,hàixiū ,Vs
+,應該,yīnggāi ,Vaux
+,相信,xiāngxìn ,Vst
+,經驗 ,jīngyàn ,N
+,關心,guānxīn ,Vst
+,辛苦,xīnkǔ ,Vs
+,願意,yuànyì ,Vaux
+,心情,xīnqíng ,N
+,幸福,xìngfú ,Vs
+,可憐,kělián ,Vs
+,差,chà ,Vs-pred
+工作,職業,zhíyè ,N
+,教師,jiàoshī ,N
+,經理,jīnglǐ ,N
+,記者,jìzhě ,N
+,服務員/服務生,fú​wù​yuán/fúwùshēng ,N
+,顧客,gùkè ,N
+,教書,jiāoshū ,V-sep
+,開會,kāihuì ,V-sep
+,下班,xiàbān ,V-sep
+,危險,wéixiǎn ,Vs
+,安全,ānquán ,Vs
+,安全 ,ānquán ,N
+,成功,chénggōng ,Vs
+,報告,bàogào ,V
+,報告 ,bàogào ,N
+,打算,dǎsuàn ,Vaux
+,機會,jīhuì ,N
+,當,dāng ,Prep
+,如果,rúguǒ ,Conj
+,計畫/劃 ,jìhuà,V
+,計畫,jìhuà ,N
+,努力,nǔlì ,Vs
+,管理,guănlǐ ,V
+教育,學院,xuéyuàn ,N
+,小學生,xiăoxuéshēng ,N
+,大學生,dàxuéshēng ,N
+,同學,tóngxué ,N
+,校長,xiàozhǎng ,N
+,放假,fàngjià,V-sep
+,畢業,bìyè ,Vp-sep
+,開學,kāixué ,Vp
+,成績,chéngjī ,N
+,學期,xuéqí ,N
+,學費,xuéfèi ,N
+,暑假,shŭjià ,N
+,寒假,hánjià ,N
+,服務,fúwù ,V
+,宿舍,sùshè,N
+,操場,cāochăng ,N
+,校園,xiàoyuán ,N
+,中文,zhōngwén ,N
+,文化,wénhuà ,N
+,語法,yǔfǎ ,N
+,漢語,hànyǔ ,N
+,書法,shūfă ,N
+,班,bān ,M
+,班 ,bān ,N
+,書桌,shūzhuō ,N
+,課,kè ,N
+,字典,zìdiǎn ,N
+,漢字,hànzì ,N
+,鉛筆,qiānbǐ ,N
+,尺,chǐ ,N
+,毛筆,máobĭ ,N
+,教,jiào ,V
+,講,jiǎng ,V
+,講話,jiǎnghuà ,V-sep
+,告訴,gàosù ,V
+,念/唸,niàn ,V
+,練習 ,liànxí ,N
+,討論,tǎolùn ,V
+,認為,rènwéi ,V
+,解釋,jiěshì ,N
+,同意,tóngyì ,Vst
+,了解/瞭解,liǎojiě ,Vst
+,清楚,qīngchǔ ,Vs
+,無聊,wúliáo ,Vs
+,決定,juédìng ,Vp
+,遍,biàn ,M
+,交,jiāo ,V
+,借,jiè ,V
+,算,suàn ,V
+,對,duì ,Vs
+,錯,cuò ,Vp
+,辦法,bànfǎ ,N
+,方法,fāngfǎ ,N
+,有用,yǒuyòng ,Vs
+,進步,jìnbù ,Vp
+,忘,wàng ,Vp
+,記,jì ,V
+房屋與家庭、環境,公寓,gōngyù ,N
+,大樓,dàlóu ,N
+,臥室,wòshì ,N
+,花園,huāyuán ,N
+,門口,ménkǒu ,N
+,浴室,yùshì ,N
+,樓梯,lóutī ,N
+,牆,qiáng ,N
+,洗衣機,xǐyījī ,N
+,冰箱,bīngxiāng ,N
+,燈,dēng ,N
+,打開,dǎkāi ,Vp
+,盒子,hézi,N
+,鄰居,línjū ,N
+,熱鬧,rènào ,Vs
+,吵,chǎo ,Vs
+,滿意,mǎnyì ,Vst
+,乾淨,gānjìng ,Vs
+,房租,fángzū ,N
+,租,zū ,V
+,開水,kāishuǐ ,N
+,鄉下,xiāngxià ,N
+,森林,sēnlín ,N
+,地,dì ,N
+,草,cǎo ,N
+,枝,zhī ,M
+,隻,zhī ,M
+,動物,dòngwù ,N
+,牛,niú ,N
+,虎,hŭ ,N
+,羊,yáng ,N
+,豬,zhū ,N
+,月亮,yuèliàng ,N
+,星星,xīngxīng ,N
+,雲,yún ,N
+,地球,dìqiú ,N
+,世界,shìjiè ,N
+,環境,huánjìng ,N
+,火,huǒ ,N
+,晴天,qíngtiān ,N
+,暖和,nuǎnhuo ,Vs
+,涼快,liángkuài ,Vs
+,溫暖,wēnnuăn ,Vs
+,度,dù ,M
+,溫度,wēndù ,N
+,雨,yǔ ,N
+,雪,xuě ,N
+,空氣,kōngqì ,N
+,間,jiān ,M
+日常生活,睡,shuì ,Vi
+,發生,fāshēng ,Vpt
+,發現,fāxiàn ,Vp
+,發現 ,fāxiàn ,N
+,照顧,zhàogù ,V
+,打掃,dǎsǎo ,V
+,餐,cān ,N
+,起來,qǐlái ,Vp
+,搬,bān ,V
+,掛,guà ,V
+,有空/有空兒,yǒukòng/yǒukòngr,Vs
+,過年,guònián ,Vi
+閒暇時間、娛樂,結束,jiéshù ,Vp
+,完,wán ,Vp
+,散步,sànbù ,V-sep
+,爬,pá ,Vi
+,跳,tiào ,Vi
+,座位,zuòwèi ,N
+,博物館,bówùguăn ,N
+,節目,jiémù ,N
+,新聞,xīnwén ,N
+,政治,zhèngzhì ,N
+,體育,tǐyù ,N
+,網站,wǎngzhàn ,N
+,還,hái ,Adv
+,經常,jīngcháng ,Adv
+,平常,píngcháng ,N
+,總是,zǒngshì ,Adv
+,已經,yǐjīng ,Adv
+,各,gè ,Det
+,雜誌,zázhì ,N
+,文章,wénzhāng ,N
+,故事,gùshì ,N
+,小說,xiǎoshuō ,N
+,美術,měishù ,N
+,藝術,yìshù ,N
+,興趣,xìngqù ,N
+,收,shōu ,V
+,談,tán ,V
+,聊天/聊天兒,liáotiān/liáotiānr,V-sep
+,唱,chàng ,V
+,歌,gē,N
+,早,zǎo ,Vs
+,遲到,chídào ,Vp
+,後來,hòulái ,N
+,變,biàn ,V
+,跳舞,tiàowǔ ,V-sep
+,樂器,yuèqì ,N
+,吉他,jítā ,N
+,鋼琴,gāngqín ,N
+,可怕,kěpà ,Vs
+,活動,huódòng ,N
+,就,jiù ,Adv
+,消息,xiāoxí ,N
+,才,cái ,Adv
+,又,yòu ,Adv
+與他人的關係,客人,kèrén ,N
+,不好意思,bùhǎoyìsi ,
+,怎麼了,zěnmele ,
+,怎麼辦,zěnmebàn ,
+,客氣,kèqì ,Vs
+,舞會,wŭhuì ,N
+,最近,zuìjìn ,Adv
+,請客,qǐngkè ,V-sep
+,慶祝,qìngzhù ,V
+,聽說,tīngshuō ,V
+,感謝,gǎnxiè ,Vst
+,見面,jiànmiàn ,V-sep
+,約,yuē ,V
+,事,shì ,N
+,事情,shìqíng ,N
+,明信片,míngxìnpiàn ,N
+,卡片,kǎpiàn ,N
+,幫,bāng ,V
+,弄,nòng ,V
+,檢查,jiǎnchá ,V
+,通知,tōngzhī ,V
+,通知 ,tōngzhī ,N
+,叫 ,jiào ,V
+,麻煩,máfán ,N
+,偷,tōu ,V
+,錢包,qiánbāo ,N
+,拉,lā ,V
+,小偷,xiǎotōu ,N
+,滿,mǎn ,Vs
+,丟,diū ,Vp
+,啊,ā ,Ptc
+旅行,汽車,qìchē ,N
+,輛,liàng ,M
+,船/船兒,chuán/chuánr,N
+,停車場,tíngchēchăng ,N
+,搭,dā ,V
+,起飛,qĭfēi ,Vp
+,出,chū ,V
+,出來,chūlái ,Vi
+,進,jìn ,V
+,進去,jìnqù ,Vi
+,回去,huíqù ,Vi
+,路口,lùkǒu ,N
+,紅綠燈,hónglǜdēng ,N
+,橋,qiáo ,N
+,左,zuǒ,N
+,右,yòu,N
+,外,wài,N
+,裡,lǐ ,N
+,下 ,xià ,V
+,上 ,shàng ,V
+,這邊,zhèbiān ,N
+,這些,zhèxiē ,Det
+,那些,nàxiē ,Det
+,那邊,nàbiān ,N
+,旅遊,lǚyóu ,Vi
+,動物園,dòngwùyuán ,N
+,出發,chūfā ,Vp
+,離開,líkāi ,Vp
+,向,xiàng ,Prep
+,南,nán,N
+,南部,nánbù ,N
+,南邊,nánbiān,N
+,西,xī,N
+,西部,xībù ,N
+,西邊,xībiān,N
+,北,běi,N
+,北部,běibù ,N
+,北邊,běibiān,N
+,東,dōng,N
+,東部,dōngbù,N
+,東邊,dōngbiān,N
+,經過,jīngguò ,V
+,轉,zhuǎn ,V
+,掉,diào ,Vpt
+,一直,yīzhí ,Adv
+,過去,guòqù ,Vi
+,最後,zuìhòu ,N
+,動,dòng ,Vp
+,躺,tǎng ,V
+,起,qǐ ,Ptc
+,停,tíng ,Vp
+,中心,zhōngxīn ,N
+,外國,wàiguó ,N
+,護照,hùzhào ,N
+,行李,xínglĭ,N
+,出口,chūkŏu ,N
+,油,yóu ,N
+,鑰匙,yàoshi ,N
+,袋子,dàizi ,N
+,公里,gōnglǐ ,M
+,方向,fāngxiàng ,N
+,出現,chūxiàn ,Vp
+,交通,jiāotōng ,N
+健康及身體照護,臉,liǎn ,N
+,腿,tuǐ ,N
+,腳,jiǎo ,N
+,心,xīn ,N
+,鼻(子),bí(zi),N
+,背,bèi ,N
+,嘴巴,zuǐba,N
+,脖子,bózi ,N
+,健康 ,jiànkāng ,N
+,感覺,gǎnjué ,N
+,感覺 ,gǎnjué ,Vst
+,救護車,jiùhùchē,N
+,咳嗽,késòu ,Vi
+,發燒,fāshāo ,Vp-sep
+,疼,téng ,Vs
+,保險,băoxiăn ,N
+,病,bìng ,N
+,看病,kànbìng ,V-sep
+,病人,bìngrén ,N
+,掛號,guàhào ,V-sep
+,牙刷,yáshuā ,N
+,剪,jiăn ,V
+,藥房,yàofáng ,N
+,恢復,huīfù ,Vpt
+,救命,jiùmìng,V-sep
+,影響 ,yǐngxiǎng ,N
+,影響,yǐngxiǎng ,V
+購物,飽,bǎo ,Vs
+,吃飽,chībǎo ,Vp
+,簡單,jiǎndān ,Vs
+,書店,shūdiàn ,N
+,超級市場/超市,chāojíshìchǎng/chāoshì ,N
+,戴,dài ,V
+,試,shì ,V
+,輕,qīng ,Vs
+,重,zhòng ,Vs
+,流行,liúxíng ,Vs
+,藍色,lánsè ,N
+,綠色,lǜsè ,N
+,紅色,hóngsè ,N
+,黑色,hēisè ,N
+,手錶/錶,shǒubiǎo/biǎo,N
+,付,fù ,V
+,襯衫,chènshān ,N
+,毛衣,máoyī ,N
+,大衣,dàyī ,N
+,牛仔褲,niúzǎikù ,N
+,雨衣,yŭyī ,N
+,內衣,nèiyī ,N
+,帽子,màozi ,N
+,皮包,píbāo ,N
+,外套,wàitào ,N
+,乾,gān ,Vp
+,舊,jiù ,Vs
+,價格,jiàgé ,N
+,價錢,jiàqián ,N
+,排隊,páiduì  ,V-sep
+,信用卡,xìnyòngkǎ ,N
+,毛,máo ,M
+,比較,bǐjiào ,Adv
+,樣子,yàngzi,N
+,特別,tèbié ,Vs
+,一般,yībān ,Vs
+,圓,yuán ,Vs
+,光,guāng ,Vp
+,看見,kànjiàn ,V
+,其他,qítā,Det
+,聲音,shēngyīn ,N
+,大聲,dàshēng ,Vs
+,好像,hǎoxiàng ,Adv
+,像,xiàng ,Vst
+,奇怪,qíguài ,Vs
+,死,sǐ ,Vp
+,髒,zāng ,Vs
+,差不多,chàbùduō ,Vs/Adv
+,一共,yīgòng ,Adv
+,需要,xūyào ,Vst
+飲食,牛排,niúpái ,N
+,米,mǐ ,N
+,三明治,sānmíngzhì ,N
+,西瓜,xīguā ,N
+,啤酒,píjiǔ ,N
+,紅茶,hóngchá ,N
+,點菜,diǎncài ,V-sep
+,分,fēn ,V
+,包,bāo ,M
+,酸,suān ,Vs
+,苦,kǔ ,Vs
+,鹹,xián ,Vs
+,辣,là ,Vs
+,點心,diǎnxīn ,N
+,冰淇淋,bīngqílín ,N
+,餅乾,bǐnggān ,N
+,漢堡,hànbǎo ,N
+,青菜,qīngcài ,N
+,鹽,yán ,N
+,糖,táng ,N
+,煮,zhǔ ,V
+,碗 ,wǎn ,M
+,盤,pán ,M
+,條,tiáo ,M
+,位,wèi ,M
+,種,zhǒng ,M
+,口,kǒu ,M
+,夠,gòu ,Vs-pred
+,任何,rènhé ,Det
+,味道,wèidào ,N
+,香,xiāng ,Vs
+,全部,quánbù ,Det
+,所有,suǒyǒu ,Det
+,許多,xǔduō ,Det
+,新鮮,xīnxiān ,Vs
+,烤,kǎo ,V
+,嚐,cháng ,V
+,裝,zhuāng ,V
+,刀(子),dāo(zi),N
+,叉(子),chā(zi),N
+,湯匙,tāngchí ,N
+,筷子,kuàizi ,N
+其他,沒(有),méi(yǒu) ,Ptc
+,別,bié ,Adv
+,不用,bùyòng ,Adv
+,不但,bùdàn ,Conj
+,只好,zhǐhǎo ,Adv
+,正在,zhèngzài ,Adv
+,馬上,mǎshàng ,Adv
+,把,bǎ ,Ptc
+,被,bèi ,Ptc
+,讓,ràng ,Ptc
+,或,huò ,Conj
+,或是,huòshì ,Conj
+,可能 ,kěnéng ,N
+,然後,ránhòu ,Adv
+,但是,dànshì ,Conj
+,而且,érqiě ,Conj
+,雖然,suīrán ,Conj
+,原來,yuánlái ,Adv
+,也許,yěxǔ ,Adv
+,為了,wèile ,Prep
+,必須,bìxū ,Adv
+,永遠,yǒngyuǎn ,Adv
+,邊/邊兒,biān/biānr,N
+,那麼,nàme,Adv
+,這麼,zhème,Adv
+,本來,běnlái ,Adv
+,要是,yàoshì ,Conj
