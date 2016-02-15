@@ -286,7 +286,7 @@
       (loop for line = (read-line f nil nil)
             while line
             do (cl-ppcre:register-groups-bind (trad simp pinyin translation)
-                   ("^(\\w+)\\s+(\\w+)\\s+\\[(.*)\\]\\s+([^\\r]*)\\r?$" line )
+                   ("^(\\w+)\\s+(\\w+)\\s+\\[([^]]*)\\]\\s+([^\\r]*)\\r?$" line )
                  ;;(break "~A ~A p:~A tr:~A" trad simp pinyin translation)
                  ;; (when (gethash trad wordhash)
                  ;;   (error "duplicate: ~A" trad))
