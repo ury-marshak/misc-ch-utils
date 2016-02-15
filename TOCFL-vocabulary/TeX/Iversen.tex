@@ -76,21 +76,37 @@
 \AddToShipoutPicture{%
     \setlength\unitlength{1mm}%
     \AtPageLowerLeft{%
-        \put(52.5, 0){\color{verylightgray}\vrule width .5pt height \paperheight}%
-        \put(105, 0){\color{verylightgray}\vrule width .5pt height \paperheight}%
-        \put(157.5, 0){\color{verylightgray}\vrule width .5pt height \paperheight}%
-        \put(55, 287){\color{lightgray}\textit{TOCFL L1} --- Page  \textbf{\thepage} }%
+        \put(52.5, 0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(105, 0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(157.5, 0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(55, 287){\color{lightgray}\fontsize{9}{9}\selectfont\textit{TOCFL \textbf{L1}} --- Page  \textbf{\thepage} }%
     }%
 }
 
+\usepackage{textcomp}
+
+\AtBeginDocument{%
+  % Make the page numbers in text figures
+  \let\myThePage\thepage
+  \renewcommand{\thepage}{ \oldstylenums{\myThePage} }
+}
 
 %%-----------
+% \newcommand{\outputword}[4]{%
+% \noindent{%
+% \mbox{\makebox[0mm][l]{\raisebox{3mm}{\textcolor{chinese-color}{\hspace*{0.5mm}\fontsize{32}{26}\selectfont\kai{#2}}}}}%
+% \mbox{\raisebox{0mm}{\hspace*{2mm} \fontsize{8}{8}\selectfont{}\textbf{#3 #4 #1}}}\\*[-5.1mm]
+% \mbox{\color{lightgray}\rule{\linewidth}{0.2pt}}}\\*[1mm]
+% }
+
 \newcommand{\outputword}[4]{%
-\noindent{%
-\mbox{\makebox[0mm][l]{\raisebox{3mm}{\textcolor{chinese-color}{\hspace*{0.5mm}\fontsize{32}{26}\selectfont\kai{#2}}}}}%
-\mbox{\raisebox{0mm}{\hspace*{2mm} \fontsize{8}{8}\selectfont{}\textbf{#3 #4 #1}}}\\*[-5.1mm]
-\mbox{\color{lightgray}\rule{\linewidth}{0.2pt}}}\\*[1mm]
+
+{\textcolor{chinese-color}{\hspace*{0.5mm}\fontsize{27}{28}\selectfont\kai{#2}}}\\*[-1mm]
+{\hspace*{2mm} \fontsize{8}{8}\selectfont{}\textbf{\textit{#3}} #4 %
+\textbf{{\color{lightgray}(#1)}}}\\*[-4.5mm]
+\mbox{\color{lightgray}\rule{\linewidth}{0.2pt}}\\*[0.8mm]
 }
+
 
 \newcommand{\skipwordspace}{\vfill\dotfill\vfill}
 \newcommand{\nextwordpage}{\clearpage}
