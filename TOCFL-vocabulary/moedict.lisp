@@ -47,8 +47,7 @@
 
 (defun load-rt-1-8-data (fname-in)
   (with-open-file (infile fname-in :direction :input
-                                   :external-format
-                                              :utf-8)
+                                   :external-format :utf-8)
     (let ((data (loop for line = (read-line infile nil nil)
                       ;; repeat 100
                       while line
