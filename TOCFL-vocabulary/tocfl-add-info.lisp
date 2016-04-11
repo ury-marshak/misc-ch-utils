@@ -16,6 +16,10 @@
  )
 
 
+;;;
+;;; Load moedict.lisp first
+;;;
+
 (in-package :tocfl-add)
 (declaim (optimize (safety 3) (debug 3) (speed 0) (space 0)))
 
@@ -35,6 +39,13 @@
 
 
 
+(defun remove-formatting (s)
+  (setf s (ppcre:regex-replace-all "^\\\"(.*)\\\"" s "\\1"))
+  (ppcre:regex-replace-all "<[^>]*>" s ""))
+
+
+
+
 (defvar *rth-hash* nil)
 
 (defparameter +rth-path+ "/home/ury/work/CH/RTHplusGrades1-8.tsv")
@@ -50,17 +61,25 @@
 
       (setf *rth-hash* (make-hash-table :test 'equalp))
       
-      (loop for (trad keyword . rest) in data
+      (loop for (trad keyword PoS . rest) in data
             do (assert (null (gethash trad *rth-hash*)))
-               (setf (gethash trad *rth-hash*) keyword)))))
+               (setf (gethash trad *rth-hash*) (list :keyword keyword
+                                                     :PoS (remove-formatting PoS)))))))
 
 
 (defun get-rth-name (trad)
   (unless *rth-hash*
     (load-rth-data))
 
-  (or (gethash trad *rth-hash*)
-      "?"))
+  (let ((rth (gethash trad *rth-hash*)))
+    (if rth
+        (let ((result (getf rth :keyword))
+              (PoS (getf rth :PoS)))
+          (when (plusp (length PoS))
+            (setf result
+                  (concatenate 'string result "[" PoS "]")))
+          result)
+        "?")))
 
 
 (defun make-rth-line (expr)
@@ -83,11 +102,6 @@
 
     (cons total-strokes
           (moedict::join "" line-list))))
-
-(defun remove-formatting (s)
-  (setf s (ppcre:regex-replace-all "^\\\"(.*)\\\"" s "\\1"))
-  (ppcre:regex-replace-all "<[^>]*>" s ""))
-
 
 (defun add-data-tocfl ()
   (let ((data (load-tocfl-tsv +tocfl-tsv-path+))

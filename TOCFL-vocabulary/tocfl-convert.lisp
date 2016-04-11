@@ -25,6 +25,10 @@
 
  |#
 
+;;;
+;;; Load moedict.lisp and tocfl-add-info.lisp first
+;;;
+
 
 (in-package :tocfl)
 (declaim (optimize (safety 3) (debug 3) (speed 0) (space 0)))
@@ -80,23 +84,27 @@
     (let ((words (split-parentheses word ))
           result)
 
-      (setf words (remove-if #'bopomofo-only words))
-      ;; (break "~A" words)
-      (assert (<= (length words) 2 ))
+      (assert (<= (length words) 3 )))
 
-      (push (first words) result)
-      (when (> (length words) 1)
-        (push (concatenate 'string (first words) (second  words)) result))
-
-      (nreverse result)
-      )))
+    (let ((result))
+      (push word result)
+      (cl-ppcre:register-groups-bind (a b c)
+          ("^(.*)\\((.*)\\)(.*)$" word)
+        (setf result '())
+        (if (bopomofo-only b)
+            (push (concatenate 'string a c) result)
+            (progn
+              (push (concatenate 'string a c) result)
+              (push (concatenate 'string a b c) result))))
+      (nreverse result))
+    ))
 
 
 (defun expand-row-separate-lines (row)
   "Return a list of output lines"
 
   (let ((output))
-    (destructuring-bind  (&key (category "") word pinyin pos &allow-other-keys)
+    (destructuring-bind  (&key (category "") word pinyin PoS &allow-other-keys)
         row
       (if (and category
                (plusp (length category)))
@@ -124,7 +132,7 @@
 
          (loop for w in words
                for p in pinyins
-               do (let ((line (list category w p pos)))
+               do (let ((line (list category w p PoS)))
                     (push line output)))
          )))
     (nreverse output)))
@@ -134,7 +142,7 @@
 
 (defun process-row-pleco (row)
   (let ((output))
-    (destructuring-bind  (category word pinyin pos)
+    (destructuring-bind  (category word pinyin PoS)
         row
       (when (and category
                  (string/= category *output-category*))
@@ -158,7 +166,7 @@
          (*output-category* "")
          (data (load-data fname-in (if has-categories +fields-with-category+ +fields-without-category+)))
          res
-         (debug t))
+         (debug nil))
 
     (format t "~%Source rows: ~A" (length data))
 
@@ -166,7 +174,7 @@
                      for n from 0
                      with new-data = nil
                      for process = (or (not debug)
-                                       (and (>= n 0) (<= n 10000)))
+                                       (and (>= n 0) (<= n 100)))
                      when process
                        do (setf new-data (funcall expand-row row))
                      when process
@@ -235,15 +243,23 @@
 
 (defun process-row-tsv (row)
   (let ((output))
-    (destructuring-bind  (category word pinyin pos)
+    (destructuring-bind  (category word pinyin PoS)
         row
 
-      (let* ((cedict-line (cedict-to-line word))
-             (line (format nil "TW~4,'0d~c~A~c~A~c~A~c~A~c~A~c~A"
-                           *running-number* #\Tab word #\Tab
-                           pinyin #\Tab pos #\Tab category #\Tab
-                           (simp-or-empty word) #\Tab
-                           cedict-line)))
+      (let* ((hint "")
+             (keyword "")
+             (comments "")
+             (produce "")
+             (index (format nil "TW~4,'0d" *running-number*))
+             (strokes-and-rth-line (tocfl-add::make-rth-line word))
+             (strokes (car strokes-and-rth-line))
+             (rth-line (cdr strokes-and-rth-line))
+             (cedict-line (cedict-to-line word))
+             (out-row (list index word hint pinyin
+                            PoS keyword comments strokes
+                            rth-line cedict-line category
+                            (simp-or-empty word) produce))
+             (line (moedict::join (string #\Tab) out-row)))
         (push line output))
       
       )
@@ -252,6 +268,7 @@
 
 
 (defparameter +L2-starting-number+ 538)
+(defparameter +L3-starting-number+ 1050)
 
 (defun convert-L1-tsv ()
   (let ((*running-number* 1))
@@ -267,6 +284,13 @@
                    :has-categories t
                    :process-row #'process-row-tsv)))
 
+
+(defun convert-L3-tsv ()
+  (let ((*running-number* +L3-starting-number+))
+    (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L3.csv"
+                   "~/work/CH/TOCFL-vocabulary/L3-vocabulary.tsv"
+                   :has-categories nil
+                   :process-row #'process-row-tsv)))
 ;; (res (loop for row in (fare-csv:read-csv-file *import-file-name*
 ;;                                                        :external-format :utf-8)
 ;;                     for first-line = t then nil
@@ -307,10 +331,10 @@
 
 
 (defun expand-row-original-lines (row)
-  (destructuring-bind  (&key (category "") word pinyin pos &allow-other-keys)
+  (destructuring-bind  (&key (category "") word pinyin PoS &allow-other-keys)
       row
 
-    (list (list category word pinyin pos))))
+    (list (list category word pinyin PoS))))
 
 
 (defun match-bopomofo-filter (pos)
