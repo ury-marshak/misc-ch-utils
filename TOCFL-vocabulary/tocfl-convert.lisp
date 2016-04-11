@@ -399,3 +399,12 @@
                    :expand-row #'expand-row-original-lines
                    :process-row #'process-row-latex)))
 
+(defun convert-L3-latex ()
+  (let ((*running-number* +L3-starting-number+)
+        (*latex-row* 0))
+    (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L3.csv"
+                   "~/work/CH/TOCFL-vocabulary/L3-vocabulary.tex"
+                   :has-categories nil
+                   :expand-row #'expand-row-original-lines
+                   :process-row #'process-row-latex)))
+
