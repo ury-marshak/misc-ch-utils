@@ -103,7 +103,7 @@
     (cons total-strokes
           (moedict::join "" line-list))))
 
-(defun add-data-tocfl ()
+(defun add-data-tocfl1 ()
   (let ((data (load-tocfl-tsv +tocfl-tsv-path+))
         (newdata))
     (setf newdata (loop for row in data
@@ -112,6 +112,27 @@
                         for (total-strokes . rth-line) = (make-rth-line trad)
                         do (setf row (nconc row (list total-strokes rth-line)))
                            (setf (nth 5 row) (remove-formatting (nth 5 row)))
+                        collect row))
+    (with-open-file (f-out +tocfl-tsv-new-path+
+                           :external-format :utf-8
+                           :direction :output
+                           :if-does-not-exist :create
+                           :if-exists :supersede)
+      
+      (loop for row in newdata
+            do (format f-out "~A~%"
+                       (moedict::join (string #\Tab) row))))))
+
+
+(defun add-data-tocfl ()
+  (let ((data (load-tocfl-tsv +tocfl-tsv-path+))
+        (newdata))
+    (setf newdata (loop for row in data
+                        ;; repeat 20
+                        for index = (first row)
+                        do ;;(setf row (nconc row (list index)))
+                           ;;(setf (nth 1 row) "")
+                           (setf row (list index index))
                         collect row))
     (with-open-file (f-out +tocfl-tsv-new-path+
                            :external-format :utf-8

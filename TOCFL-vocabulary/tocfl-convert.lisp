@@ -81,8 +81,7 @@
                 s
                 :remove-empty-subseqs t)))
 
-    (let ((words (split-parentheses word ))
-          result)
+    (let ((words (split-parentheses word )))
 
       (assert (<= (length words) 3 )))
 
@@ -99,6 +98,10 @@
       (nreverse result))
     ))
 
+(defvar *running-number* 1)
+
+(defvar *max-variants* 0)
+;; (defvar *num-large-variants* 0)
 
 (defun expand-row-separate-lines (row)
   "Return a list of output lines"
@@ -108,8 +111,8 @@
         row
       (if (and category
                (plusp (length category)))
-        (setf *current-category* category)
-        (setf category *current-category*))
+          (setf *current-category* category)
+          (setf category *current-category*))
 
       (flet ((split/ (s)
                (split-sequence:split-sequence-if
@@ -117,33 +120,56 @@
                     (member c '(#\/  )))
                 s
                 :remove-empty-subseqs t)))
-       (let ((words (split/ word ))
-             (pinyins (split/ pinyin )))
+        (let ((words (split/ word ))
+              (pinyins (split/ pinyin )))
 
-         (setf words (loop for str in words
-                           append (expand-parentheses str)))
-         (setf pinyins (loop for str in pinyins
-                           append (expand-parentheses str)))
+          (setf words (loop for str in words
+                            append (expand-parentheses str)))
+          (setf pinyins (loop for str in pinyins
+                              append (expand-parentheses str)))
 
-         (when (and (= (length words) 2) (= (length pinyins) 1))
-           (setf pinyins (append pinyins pinyins)))
-        
-         (assert (= (length words) (length pinyins)))
+          (when (and (= (length words) 2) (= (length pinyins) 1))
+            (setf pinyins (append pinyins pinyins)))
 
-         (loop for w in words
-               for p in pinyins
-               do (let ((line (list category w p PoS)))
-                    (push line output)))
-         )))
+          (assert (= (length words) (length pinyins)))
+          (setf *max-variants* (max *max-variants* (length words)))
+          ;; (when (> (length words) 2)
+          ;;   (incf *num-large-variants*))
+
+          (let ((variants-list))
+            (setf variants-list (loop for w in words
+                                      for p in pinyins
+                                      for first = t then nil
+                                      unless first
+                                        collect (cons w p)))
+
+            (push (list category
+                      (first words)
+                      (first pinyins)
+                      PoS
+                      (format nil "TW~4,'0d" *running-number*)
+                      variants-list)
+                  output)))))
+    (incf *running-number*)
     (nreverse output)))
 
+(defun join-variants-with-pinyin (variants)
+  (let ((variants-list (loop for (w . p) in variants
+                             collect (format nil "~A [~A]" w p))))
+    (moedict::join ", " variants-list)))
+
+(defun join-variants-without-pinyin (variants)
+  (let ((variants-list (loop for (w . p) in variants
+                             collect w)))
+    (moedict::join " " variants-list)))
 
 (defvar *output-category* "")
 
 (defun process-row-pleco (row)
   (let ((output))
-    (destructuring-bind  (category word pinyin PoS)
+    (destructuring-bind  (category word pinyin PoS index variants)
         row
+      (declare (ignore PoS index variants))
       (when (and category
                  (string/= category *output-category*))
         (setf *output-category* category)
@@ -151,7 +177,7 @@
 
       (let ((line (format nil "~A~c~A" word #\Tab pinyin)))
         (push line output))
-      
+
       )
     (nreverse output)))
 
@@ -224,8 +250,8 @@
 
 (defun simp-or-empty (word)
   (let* ((entries (cc-cedict word))
-         (res nil)
-         (more-than-one (> (length entries) 1)))
+         ;; (more-than-one (> (length entries) 1))
+         (res nil))
     (loop for entry in entries
           do (let ((newstr (getf entry :simp)))
                (unless (member newstr res :test #'string=)
@@ -239,36 +265,46 @@
     (apply #'concatenate 'string res)))
 
 
-(defvar *running-number* 0)
+(defparameter *skip-complex-fields* nil)
 
 (defun process-row-tsv (row)
   (let ((output))
-    (destructuring-bind  (category word pinyin PoS)
+    (destructuring-bind  (category word pinyin PoS index variants)
         row
 
       (let* ((hint "")
              (keyword "")
              (comments "")
              (produce "")
-             (index (format nil "TW~4,'0d" *running-number*))
-             (strokes-and-rth-line (tocfl-add::make-rth-line word))
+             (variants-without-pinyin (join-variants-without-pinyin variants))
+             (variants-with-pinyin (join-variants-with-pinyin variants))
+             (strokes-and-rth-line (if *skip-complex-fields*
+                                       (cons "" "")
+                                       (tocfl-add::make-rth-line word)))
              (strokes (car strokes-and-rth-line))
              (rth-line (cdr strokes-and-rth-line))
-             (cedict-line (cedict-to-line word))
-             (out-row (list index word hint pinyin
-                            PoS keyword comments strokes
+             (cedict-line (if *skip-complex-fields*
+                              ""
+                              (cedict-to-line word)))
+             (out-row (list index word pinyin variants-without-pinyin
+                            PoS hint keyword comments strokes
                             rth-line cedict-line category
-                            (simp-or-empty word) produce))
+                            variants-with-pinyin
+                            (simp-or-empty word) produce
+                            ))
              (line (moedict::join (string #\Tab) out-row)))
         (push line output))
-      
+
       )
-    (incf *running-number*)
     (nreverse output)))
 
 
-(defparameter +L2-starting-number+ 538)
-(defparameter +L3-starting-number+ 1050)
+;; (defparameter +L2-starting-number+ 538)
+;; (defparameter +L3-starting-number+ 1050)
+(defparameter +L2-new-number+ 501)
+(defparameter +L3-new-number+ 999)
+(defparameter +L4-new-number+ 2495)
+(defparameter +L5-new-number+ 4990)
 
 (defun convert-L1-tsv ()
   (let ((*running-number* 1))
@@ -278,7 +314,7 @@
                    :process-row #'process-row-tsv)))
 
 (defun convert-L2-tsv ()
-  (let ((*running-number* +L2-starting-number+))
+  (let ((*running-number* +L2-new-number+))
     (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L2.csv"
                    "~/work/CH/TOCFL-vocabulary/L2-vocabulary.tsv"
                    :has-categories t
@@ -286,11 +322,24 @@
 
 
 (defun convert-L3-tsv ()
-  (let ((*running-number* +L3-starting-number+))
+  (let ((*running-number* +L3-new-number+))
     (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L3.csv"
                    "~/work/CH/TOCFL-vocabulary/L3-vocabulary.tsv"
                    :has-categories nil
                    :process-row #'process-row-tsv)))
+(defun convert-L4-tsv ()
+  (let ((*running-number* +L4-new-number+))
+    (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L4.csv"
+                   "~/work/CH/TOCFL-vocabulary/L4-vocabulary.tsv"
+                   :has-categories nil
+                   :process-row #'process-row-tsv)))
+(defun convert-L5-tsv ()
+  (let ((*running-number* +L5-new-number+))
+    (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L5.csv"
+                   "~/work/CH/TOCFL-vocabulary/L5-vocabulary.tsv"
+                   :has-categories nil
+                   :process-row #'process-row-tsv)))
+
 ;; (res (loop for row in (fare-csv:read-csv-file *import-file-name*
 ;;                                                        :external-format :utf-8)
 ;;                     for first-line = t then nil
@@ -334,7 +383,11 @@
   (destructuring-bind  (&key (category "") word pinyin PoS &allow-other-keys)
       row
 
-    (list (list category word pinyin PoS))))
+    (let ((index (format nil "TW~4,'0d" *running-number*))
+          (variants '()))
+      (prog1
+          (list (list category word pinyin PoS index variants))
+              (incf *running-number*)))))
 
 
 (defun match-bopomofo-filter (pos)
@@ -359,15 +412,13 @@
   (let ((output)
         (line)
         (w))
-    (destructuring-bind  (category word pinyin pos)
+    (destructuring-bind  (category word pinyin pos index variants)
         row
 
+      (declare (ignore category variants))
+
       (setf w (remove-bopomofo-in-parentheses word))
-      (setf line (format nil "\\outputword{TW~4,'0d}{~A}{~A}{~A}" *running-number* w pos pinyin))
-      
-      (incf *running-number* (length (expand-row-separate-lines
-                                      (list :category category :word word
-                                            :pinyin pinyin :pos pos)))))
+      (setf line (format nil "\\outputword{~A}{~A}{~A}{~A}" index w pos pinyin)))
 
 
     (push line output)
@@ -378,7 +429,7 @@
         (push "\\skipwordspace" output))
       (when (= cyclic 0)
         (push "\\nextwordpage" output)))
-    
+
     (nreverse output)))
 
 (defun convert-L1-latex ()
@@ -391,7 +442,7 @@
                    :process-row #'process-row-latex)))
 
 (defun convert-L2-latex ()
-  (let ((*running-number* +L2-starting-number+)
+  (let ((*running-number* +L2-new-number+)
         (*latex-row* 0))
     (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L2.csv"
                    "~/work/CH/TOCFL-vocabulary/L2-vocabulary.tex"
@@ -400,11 +451,10 @@
                    :process-row #'process-row-latex)))
 
 (defun convert-L3-latex ()
-  (let ((*running-number* +L3-starting-number+)
+  (let ((*running-number* +L3-new-number+)
         (*latex-row* 0))
     (convert-files "~/work/CH/TOCFL-vocabulary/vocabulary-L3.csv"
                    "~/work/CH/TOCFL-vocabulary/L3-vocabulary.tex"
                    :has-categories nil
                    :expand-row #'expand-row-original-lines
                    :process-row #'process-row-latex)))
-

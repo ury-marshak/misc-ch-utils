@@ -21,7 +21,7 @@
 (declaim (optimize (safety 3) (debug 3) (speed 0) (space 0)))
 
 
-(defvar *moedict-db* nil)
+(defvar *moedict-db* nil)  ;; (setf *moedict-db* nil)
 
 ;; Downloaded from https://github.com/kuanyui/moedict.el, uncompressed and renamed
 (defparameter +moedict-path+ "/home/ury/work/CH/moedict.sqlite3")
