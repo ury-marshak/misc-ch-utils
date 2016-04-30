@@ -24,7 +24,7 @@
 (defvar *moedict-db* nil)  ;; (setf *moedict-db* nil)
 
 ;; Downloaded from https://github.com/kuanyui/moedict.el, uncompressed and renamed
-(defparameter +moedict-path+ "/home/ury/work/CH/moedict.sqlite3")
+(defparameter +moedict-path+ "~/work/CH/moedict.sqlite3")
 
 (defun maybe-open-db ()
   (unless *moedict-db*
@@ -42,8 +42,8 @@
     (nth 3 (first result))))
 
 
-(defparameter +rt-1-8-path+ "/home/ury/work/CH/RT1-8.txt")
-(defparameter +rt-1-8-new-path+ "/home/ury/work/CH/RT1-8-new.txt")
+(defparameter +rt-1-8-path+ "~/work/CH/RT1-8.txt")
+(defparameter +rt-1-8-new-path+ "~/work/CH/RT1-8-new.txt")
 
 (defun load-rt-1-8-data (fname-in)
   (with-open-file (infile fname-in :direction :input
