@@ -29,12 +29,43 @@
 
 
 
+(defparameter +variants+ "裏爲僞臺衆箇麽麫廕鑒游板唲")
 
 
-(defparameter *input-file-name* "/home/ury/work/CH/BKRS_17_03_08/BKRS.xdxf")
-(defparameter *dtd-file-name* "/home/ury/work/CH/BKRS_17_03_08/xdxf_strict.dtd")
+(defun is-variant (word)
+  (loop for c across word
+          thereis (position c +variants+)))
 
-(defparameter *output-file-name* "/home/ury/work/CH/BKRS_17_03_08/BKRS.pleco.txt")
+
+(defparameter +modern-variants+ '((#\裏 . #\裡)))
+(defun select-trad-and-simp-headwords (headwords)
+  (cond ( (= 1 (length headwords))
+          (values (first headwords) nil '()))
+
+        ( (= 2 (length headwords))
+          (values (first headwords) (second headwords) '()))
+
+        ( t
+          (loop for (var-char . modern-char) in +modern-variants+
+                when (position var-char (first headwords))
+                  do (loop for prev = headwords then (cdr prev)
+                           for curr = (cdr headwords) then (cdr curr)
+                           when (null curr)
+                             do (error "Problem reordering ~A" headwords)
+                           when (position modern-char (car curr))
+                             do (let ((new-head (car curr)))
+                                  (setf (cdr prev) (cdr curr))
+                                  (setf headwords (cons new-head headwords))
+                                  (return)))
+                     (return))
+          (values (first headwords) (second headwords) (cddr headwords)))))
+
+
+(defparameter *home* "/Users/ury")
+(defparameter *input-file-name* (concatenate 'string *home* "/work/CH/BKRS_17_03_08/BKRS.xdxf"))
+(defparameter *dtd-file-name* (concatenate 'string *home* "/work/CH/BKRS_17_03_08/xdxf_strict.dtd"))
+
+(defparameter *output-file-name* (concatenate 'string *home* "/work/CH/BKRS_17_03_08/BKRS-pleco.txt"))
 
 (defun read-xdxf-to-dom (fname-in fname-out)
   (declare (ignorable fname-out))
@@ -108,9 +139,7 @@ is replaced with replacement."
         (indent-level 0)
         (at-bol t)
         (article-pieces)
-        (article)
-        (n-headwords)
-        (heading))
+        (article))
 
     (loop for evt = (klacks:peek-next source)
           with level = 1
@@ -201,7 +230,7 @@ is replaced with replacement."
                       (push +pleco-gray+ article-pieces))
 
                      ((end-el-p "ex")
-                      (push +pleco-/bold+ article-pieces))
+                      (push +pleco-/color+ article-pieces))
 
                      ;;
                      ((eq evt :characters)
@@ -234,20 +263,38 @@ is replaced with replacement."
     (setf article
           (apply #'concatenate 'string
                  (nreverse article-pieces)))
-    (let ((n-headwords (length headwords)))
-      (unless (and (> n-headwords 0)
-                   (<= n-headwords 2))
-        (print headwords))
-      (if (= n-headwords 1)
-          (setf heading (first headwords))
-          (setf heading (format nil "~A[~A]" (second headwords) (first headwords)))))
 
+    (let ((pinyin ""))
+      (multiple-value-bind (trad simp variants)
+          (select-trad-and-simp-headwords headwords)
+        (let ((heading (if simp
+                           (format nil "~A[~A]" simp trad)
+                           trad)))
+
+          (format outstream "~A~c~A~c~A~%" heading #\Tab pinyin #\Tab article)
+          (let ((ref-article (concatenate 'string
+                                      "Variant of "
+                                      +pleco-link+
+                                      trad
+                                      +pleco-/link+)))
+            (loop for var in variants
+                  do (format outstream "~A~c~A~c~A~%" var #\Tab pinyin #\Tab ref-article)))
+          )))
+
+
+    ;; (loop for hw in headwords
+    ;;       when (string= hw "為")
+    ;;         do (break))
     ;; (print heading)    (print article)
 
-    
+
     )
   
   )
+
+
+(defparameter +convert-from-n+ 102930)
+(defparameter +convert-to-n+ 102950)
 
 
 (defun convert-xdxf (fname-in fname-out)
@@ -258,27 +305,30 @@ is replaced with replacement."
              (when (puri:uri= sysid (puri:parse-uri uri))
                (open pathname :element-type '(unsigned-byte 8)))))
 
-      (let ((from-n nil)
-            (to-n nil)
-            (articles 0)
-            (outstream))
-        (klacks:with-open-source (source (cxml:make-source (pathname fname-in)
-                                                           :entity-resolver #'resolver))
+      (let ((articles 0))
+        (with-open-file (f-out fname-out
+                               :external-format :utf-8
+                               :direction :output
+                               :if-does-not-exist :create
+                               :if-exists :supersede)
+
+          (klacks:with-open-source (source (cxml:make-source (pathname fname-in)
+                                                             :entity-resolver #'resolver))
 
           
-          (loop for ar-el = (klacks:find-element source "ar")
-                for n from 0
-                while ar-el
-                while (or (not to-n)
-                          (< n to-n))
-                do (if (or (not from-n)
-                           (>= n from-n))
-                       (progn ;;(print n)
-                              (process-ar source outstream)
-                              (incf articles))
-                       (progn
-                         (klacks:consume source)))
-                ))
+            (loop for ar-el = (klacks:find-element source "ar")
+                  for n from 0
+                  while ar-el
+                  while (or (not +convert-to-n+)
+                            (< n +convert-to-n+))
+                  do (if (or (not +convert-from-n+)
+                             (>= n +convert-from-n+))
+                         (progn ;;(print n)
+                           (process-ar source f-out)
+                           (incf articles))
+                         (progn
+                           (klacks:consume source)))
+                  )))
         (format t "~%Articles: ~A~%" articles))))
   )
 
