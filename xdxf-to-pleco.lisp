@@ -115,19 +115,25 @@ is replaced with replacement."
 (defparameter +pleco-link+ #. (string (code-char #xEAB8)))
 (defparameter +pleco-/link+ #. (string (code-char #xEABB)))
 (defparameter +pleco-blue+ #. (coerce (list (code-char #xEAC1)
+                                            (code-char #x8000)(code-char #x8000)
                                             (code-char #x8000)
                                             (code-char #x80FF))
                                       'string))
 
 (defparameter +pleco-red+ #. (coerce (list (code-char #xEAC1)
-                                           (code-char #x8FF0)
+                                           (code-char #x8000)
+                                           (code-char #x80FF)
+                                           (code-char #x8000)
                                            (code-char #x8000))
                                      'string))
 (defparameter +pleco-gray+ #. (coerce (list (code-char #xEAC1)
-                                           (code-char #x8777)
-                                           (code-char #x8777))
+                                            (code-char #x8000)
+                                            (code-char #x8077)
+                                           (code-char #x8077)
+                                           (code-char #x8077))
                                      'string))
 (defparameter +pleco-/color+ #. (string (code-char #xEAC2)))
+
 
 
 
@@ -293,8 +299,11 @@ is replaced with replacement."
   )
 
 
-(defparameter +convert-from-n+ 102930)
-(defparameter +convert-to-n+ 102950)
+;; (defparameter +convert-from-n+ 102930)
+;; (defparameter +convert-to-n+ 102950)
+
+(defparameter +convert-from-n+ nil)
+(defparameter +convert-to-n+ nil)
 
 
 (defun convert-xdxf (fname-in fname-out)
