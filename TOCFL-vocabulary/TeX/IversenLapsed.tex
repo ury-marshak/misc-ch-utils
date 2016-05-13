@@ -1,0 +1,120 @@
+Sl2% !TEX TS-program = xelatex
+% !TEX encoding = UTF-8
+
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, left=7mm, right=7mm,
+                   top=10mm, bottom=7mm]{geometry}
+%\usepackage{palatino,url}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{xeCJK}
+\usepackage{fancyhdr}
+\usepackage{picture}
+\usepackage[]{eso-pic}
+
+\defaultfontfeatures{Mapping=tex-text}
+\defaultfontfeatures{Ligatures=TeX}
+
+\XeTeXlinebreaklocale "zh" 
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+
+\setmainfont[Mapping=tex-text]{Times New Roman} % rm
+%\setmainfont[Mapping=tex-text]{Palatino}
+\setsansfont[Mapping=tex-text]{Liberation Sans}           % sf
+\setmonofont{DejaVu Sans Mono}                       % tt
+%\setCJKmainfont{DFKai-SB} %xelatex 標楷體
+%\setCJKmainfont{MOESongUN}
+\setCJKmainfont{Adobe Ming Std}
+\setCJKsansfont{LiHei Pro}
+\setCJKmonofont{Noto Sans Mono CJK TC}  %xelatex 細明體
+
+\setCJKfamilyfont{kaifamily}{TW-MOE-Std-Kai}
+\newcommand{\kai}[1]{{\CJKfamily{kaifamily}#1}}
+
+
+\definecolor{chinese-color}{gray}{0.7}
+\definecolor{header-color}{gray}{0.5}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+
+\lhead{\today}
+\rhead{\textcolor{header-color}{TOCFL --- Lapsed}}
+\rfoot{\thepage}
+
+\pagestyle{empty}
+
+
+%\raggedright\setcounter{secnumdepth}{0}
+\raggedright
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0cm}
+\fboxsep=0pt
+
+%%-----------
+
+
+% \AddToShipoutPicture{%
+%     \setlength\unitlength{1mm}%
+%     \AtPageLowerLeft{%
+%         \put(60, 0){\vrule width .5pt height \paperheight}%
+%     }%
+% }
+
+\definecolor{verylightgray}{gray}{.90}
+\definecolor{lightgray}{gray}{.70}
+
+\AddToShipoutPicture{%
+    \setlength\unitlength{1mm}%
+    \AtPageLowerLeft{%
+        \put(52.5,   0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(105,    0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(131.25, 0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(157.5,  0){\color{verylightgray}\vrule width .3pt height \paperheight}%
+        \put(55, 287){\color{lightgray}\fontsize{9}{9}\selectfont\textit{TOCFL \textbf{Lapsed}} --- Page  \textbf{\thepage} }%
+    }%
+}
+
+\usepackage{textcomp}
+
+\AtBeginDocument{%
+  % Make the page numbers in text figures
+  \let\myThePage\thepage
+  \renewcommand{\thepage}{ \oldstylenums{\myThePage} }
+}
+
+%%-----------
+% \newcommand{\outputword}[4]{%
+% \noindent{%
+% \mbox{\makebox[0mm][l]{\raisebox{3mm}{\textcolor{chinese-color}{\hspace*{0.5mm}\fontsize{32}{26}\selectfont\kai{#2}}}}}%
+% \mbox{\raisebox{0mm}{\hspace*{2mm} \fontsize{8}{8}\selectfont{}\textbf{#3 #4 #1}}}\\*[-5.1mm]
+% \mbox{\color{lightgray}\rule{\linewidth}{0.2pt}}}\\*[1mm]
+% }
+
+\newcommand{\outputword}[4]{%
+
+{\textcolor{chinese-color}{\hspace*{0.5mm}\fontsize{27}{28}\selectfont\kai{#2}}}\\*[-1mm]
+{\hspace*{2mm} \fontsize{8}{8}\selectfont{}\textbf{\textit{#3}} #4 %
+\textbf{{\color{lightgray}(#1)}}}\\*[-4.5mm]
+\mbox{\color{lightgray}\rule{\linewidth}{0.2pt}}\\*[0.8mm]
+}
+
+
+\newcommand{\skipwordspace}{\vfill\dotfill\vfill}
+\newcommand{\nextwordpage}{\clearpage}
+
+
+\begin{document}
+%\section{Test}
+%\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+\input{../lapsed}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-engine: xetex
+%%% End:
