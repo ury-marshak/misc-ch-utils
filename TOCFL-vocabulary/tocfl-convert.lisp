@@ -187,10 +187,14 @@
 
 (defun convert-files (fname-in fname-out &key has-categories
                                               (expand-row #'expand-row-separate-lines)
-                                              (process-row #'process-row-pleco))
+                                              (process-row #'process-row-pleco)
+                                              data)
+
+  ;; If data is present we ignore the fname-in and has-categories parameters and use the supplied data
   (let* ((*current-category* "")
          (*output-category* "")
-         (data (load-data fname-in (if has-categories +fields-with-category+ +fields-without-category+)))
+         (data (or data
+                   (load-data fname-in (if has-categories +fields-with-category+ +fields-without-category+))))
          res
          (debug nil))
 
@@ -458,3 +462,93 @@
                    :has-categories nil
                    :expand-row #'expand-row-original-lines
                    :process-row #'process-row-latex)))
+
+
+;;------- Lapdes to LaTeX
+(defun load-tsv-data (fname-in fields)
+  (with-open-file (infile fname-in :direction :input
+                                   :external-format :utf-8)
+    (loop for line = (read-line infile nil nil)
+          for row = (split-sequence:split-sequence #\Tab line)
+          for first-line = t then nil
+          ;; unless first-line
+          while line
+          collect (loop for v in row
+                        for k in fields
+                        collect k
+                        collect v))))
+
+
+(defparameter +tocfl-lapsed-path+  "~/work/CH/TOCFL-vocabulary/TOCFL-Recogn. @lapsed \\[Spaced].txt"
+  ;;(make-pathname :name "TOCFL-Recogn. @lapsed [Spaced]" :type "txt" :defaults "/Users/ury/work/CH/TOCFL-vocabulary/")
+  )
+(defparameter +tocfl-lapsed-tex-output+  "~/work/CH/TOCFL-vocabulary/lapsed.tex"
+  )
+(defparameter +tocfl-fields+ '(:index :trad :pinyin :variants :pos
+                               :hint :keyword :comments :strokes :characters-rth
+                               :meaning :category :variants-pinyin :simp :rank
+                               :produce))
+
+(defun load-tocfl-lapsed-data ()
+  (load-tsv-data +tocfl-lapsed-path+ +tocfl-fields+))
+
+
+(defun load-all-tocfl-levels ()
+  (let ((data (loop for (n . has-categories) in '((1 . t) (2 . t)
+                                                  (3 . nil) (4 . nil)
+                                                  (5 . nil))
+                    nconc (load-data (format nil "~~/work/CH/TOCFL-vocabulary/vocabulary-L~A.csv" n)
+                                     (if has-categories
+                                         +fields-with-category+
+                                         +fields-without-category+))))
+        (str-index-hash (make-hash-table :test 'equalp)))
+
+    (loop for n from 1
+          for row in data
+          do (setf (gethash (format nil "TW~4,'0d" n) str-index-hash)
+                   row))
+    ;; (format t "Len ~A~%" (length data))
+    str-index-hash))
+
+(defun lapsed-to-tex ()
+  (let ((lapsed-data (load-tocfl-lapsed-data))
+        (str-index-hash (load-all-tocfl-levels))
+        (*latex-row* 0)
+        data)
+
+    (setf data (loop for lapsed-row in lapsed-data
+                    for raw-row = (gethash (getf lapsed-row :index) str-index-hash)
+                    collect raw-row))
+
+    (convert-files nil
+                   +tocfl-lapsed-tex-output+
+                   :expand-row #'expand-row-original-lines
+                   :process-row #'process-row-latex
+                   :data data)
+
+    ;; ;; (print data)
+    ;; (setf expanded-data (loop for lapsed-row in lapsed-data
+    ;;                 for raw-row = (gethash (getf lapsed-row :index) str-index-hash)
+    ;;                 for result = (expand-row-original-lines raw-row)
+    ;;                 for n from 0
+    ;;                 when result
+    ;;                   append result))
+
+    ;; (setf res (loop for lapsed-row in lapsed-data
+    ;;                 for raw-row = (gethash (getf lapsed-row :index) str-index-hash)
+    ;;                 for row in expanded-data
+    ;;                 for result = (process-row-latex row)
+    ;;                 for n from 0
+    ;;                 when result
+    ;;                   append result))
+
+    ;; (format t "~%Rows: ~A" (length res))
+    ;; ;; (print res)
+    ;; (with-open-file (f-out +tocfl-lapsed-tex-output+
+    ;;                        :external-format :utf-8
+    ;;                        :direction :output
+    ;;                        :if-does-not-exist :create
+    ;;                        :if-exists :supersede)
+    ;;   (loop for line in res
+    ;;         do (format f-out "~A~%" line)))
+    ))
