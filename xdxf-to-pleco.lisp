@@ -87,7 +87,7 @@
 
 
 (defun replace-all (string part replacement &key (test #'char=))
-"Returns a new string in which all the occurences of the part 
+"Returns a new string in which all the occurences of the part
 is replaced with replacement."
     (with-output-to-string (out)
       (loop with part-length = (length part)
@@ -157,7 +157,7 @@ is replaced with replacement."
 
                     (replace-newlines (s)
                       (replace-all s (string #\Newline) +pleco-newline+))
-                    
+
                     (start-el-p (name)
                       (and (eq evt :start-element)
                            (string= (klacks:current-lname source) name)))
@@ -202,7 +202,7 @@ is replaced with replacement."
 
                      ;;
                      ((start-el-p "c")
-                      
+
                       (let ((red nil))
                         (klacks:map-attributes #'(lambda (ns loc qual value specified)
                                                    (declare (ignore ns qual specified))
@@ -214,11 +214,11 @@ is replaced with replacement."
                             (push +pleco-red+ article-pieces)
                             (push +pleco-blue+ article-pieces))))
 
-                     ((end-el-p "c")                      
+                     ((end-el-p "c")
                       (push +pleco-/color+ article-pieces))
                      ;;
 
-                     ((start-el-p "i")                      
+                     ((start-el-p "i")
                       (push +pleco-italic+ article-pieces))
 
                      ((end-el-p "i")
@@ -261,16 +261,34 @@ is replaced with replacement."
 
                      ;;
                      (t (error "unknown ~A" evt))
-                     
-                     ))
-             
-             
-          )
+
+                     )))
+
+
     (setf article
           (apply #'concatenate 'string
                  (nreverse article-pieces)))
 
     (let ((pinyin ""))
+      ;; Add variants to article when more than two
+      (when (> (length headwords) 2)
+        (let ((headwords-line))
+          (loop for hw in headwords
+                for joiner = "" then "/"
+                do (setf headwords-line (concatenate 'string
+                                                     headwords-line
+                                                     joiner
+                                                     +pleco-link+
+                                                     hw
+                                                     +pleco-/link+)))
+          (setf article (concatenate 'string
+                                     headwords-line
+                                     +pleco-newline+
+                                     +pleco-newline+
+                                     article))))
+
+      ;; select headwords for the current article, write it and make more
+      ;; "variant of" articles for additional headwords
       (multiple-value-bind (trad simp variants)
           (select-trad-and-simp-headwords headwords)
         (let ((heading (if simp
@@ -284,8 +302,7 @@ is replaced with replacement."
                                       trad
                                       +pleco-/link+)))
             (loop for var in variants
-                  do (format outstream "~A~c~A~c~A~%" var #\Tab pinyin #\Tab ref-article)))
-          )))
+                  do (format outstream "~A~c~A~c~A~%" var #\Tab pinyin #\Tab ref-article))))))
 
 
     ;; (loop for hw in headwords
@@ -295,15 +312,16 @@ is replaced with replacement."
 
 
     )
-  
+
   )
 
+
+(defparameter +convert-from-n+ nil)
+(defparameter +convert-to-n+ nil)
 
 ;; (defparameter +convert-from-n+ 102930)
 ;; (defparameter +convert-to-n+ 102950)
 
-(defparameter +convert-from-n+ nil)
-(defparameter +convert-to-n+ nil)
 
 
 (defun convert-xdxf (fname-in fname-out)
@@ -324,7 +342,7 @@ is replaced with replacement."
           (klacks:with-open-source (source (cxml:make-source (pathname fname-in)
                                                              :entity-resolver #'resolver))
 
-          
+
             (loop for ar-el = (klacks:find-element source "ar")
                   for n from 0
                   while ar-el
