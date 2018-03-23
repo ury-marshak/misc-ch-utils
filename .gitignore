@@ -1,6 +1,8 @@
 *~
 \#*
 
+.DS_Store
+
 *.txt
 *.seg
 *.u8
