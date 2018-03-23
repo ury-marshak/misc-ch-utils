@@ -14,6 +14,8 @@
 *.odt
 *.pdf
 *.xml
+*.dvi
+*.fls
 
 *.gz
 *.7z
@@ -36,5 +38,6 @@ auto/
 *.aux
 *.log
 *.synctex.gz
+*_latexmk
 
 !TOCFL-vocabulary/*.csv
