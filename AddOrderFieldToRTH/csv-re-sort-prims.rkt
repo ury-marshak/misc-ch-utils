@@ -7,10 +7,13 @@
                     [cat cat/54]))
 
 (require csv-reading)
+(require csv-writing)
 
 
 
 (define IN-FILENAME "Remembering Traditional Hanzi 1+2.txt")
+(define OUT-FILENAME "RTH1+2-order.txt")
+(define CHARACTER-FIELD-NUM 0)
 (define RTH-ID-FIELD-NUM 5)
 (define STUDY-ORDER-FIELD-NUM 14)
 
@@ -30,6 +33,13 @@
 (define (read-file infilename)
   (with-input-from-file infilename
     (lambda () (all-rows (current-input-port)))))
+
+(define (write-file outfilename data)
+  (let ((printing-params (make-csv-printing-params
+                          #:quotes-only-when-needed? #f)))
+   (with-output-to-file outfilename
+     (lambda () (display-table data (current-output-port) #:printing-params printing-params ))
+     #:exists 'replace)))
 
 
 (define (read-RTH)
@@ -76,6 +86,11 @@
 
 (define (process)
   (let ((data (read-RTH)))
-    (let ((newdata (map process-row data)))
-      (take newdata 5))
+    (let* ((newdata (map process-row data))
+           (orderdata (map (lambda (row)
+                             (list (list-ref row CHARACTER-FIELD-NUM)
+                                   (list-ref row STUDY-ORDER-FIELD-NUM)))
+                           newdata)))
+      (write-file OUT-FILENAME orderdata)
+      (take orderdata 5))
     ))
