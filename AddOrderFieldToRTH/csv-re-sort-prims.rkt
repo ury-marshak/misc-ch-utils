@@ -10,6 +10,22 @@
 (require csv-writing)
 
 
+#|
+From https://www.reddit.com/r/Anki/comments/736sx4/how_do_i_change_the_card_order_of_a_deck/
+
+You have to first add the field KanjiOrder and put 5-digit numbers there.
+( i am surprised your deck does not have it ).
+After adding a few cards, sort by the field KanjiOrder and Reposition - to save the order.
+
+
+Reposition means sort the cards by the sort field, select all cards and then
+Menu / Cards / Reposition / From 0, Step 1
+
+And then order the filtered deck by "Due"
+
+|#
+
+
 
 (define IN-FILENAME (make-parameter "Remembering Traditional Hanzi 1+2.txt"))
 (define OUT-FILENAME "RTH-order.txt")
