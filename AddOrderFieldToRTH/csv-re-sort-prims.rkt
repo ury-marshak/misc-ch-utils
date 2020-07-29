@@ -11,8 +11,8 @@
 
 
 
-(define IN-FILENAME "Remembering Traditional Hanzi 1+2.txt")
-(define OUT-FILENAME "RTH1+2-order.txt")
+(define IN-FILENAME (make-parameter "Remembering Traditional Hanzi 1+2.txt"))
+(define OUT-FILENAME "RTH-order.txt")
 (define CHARACTER-FIELD-NUM 0)
 (define RTH-ID-FIELD-NUM 5)
 (define STUDY-ORDER-FIELD-NUM 14)
@@ -44,7 +44,7 @@
 
 (define (read-RTH)
   ;; "~/work/rth-sort/Remembering Traditional Hanzi 1+2.txt"
-  (read-file IN-FILENAME))
+  (read-file (IN-FILENAME)))
 
 
 ;; (regexp-match #px"([^\\d]*)([\\d]*)([^\\d]*)" "N002P")
@@ -84,13 +84,23 @@
                (lambda (v) (calc-study-order-field (list-ref row RTH-ID-FIELD-NUM)))))
 
 
-(define (process)
-  (let ((data (read-RTH)))
-    (let* ((newdata (map process-row data))
-           (orderdata (map (lambda (row)
-                             (list (list-ref row CHARACTER-FIELD-NUM)
-                                   (list-ref row STUDY-ORDER-FIELD-NUM)))
-                           newdata)))
-      (write-file OUT-FILENAME orderdata)
-      (take orderdata 5))
-    ))
+(define (process (fname #f))
+  (parameterize ([IN-FILENAME (or fname (IN-FILENAME))])
+   (let ((data (read-RTH)))
+     (let* ((newdata (map process-row data))
+            (orderdata (map (lambda (row)
+                              (list (list-ref row CHARACTER-FIELD-NUM)
+                                    (list-ref row STUDY-ORDER-FIELD-NUM)))
+                            newdata)))
+       (write-file OUT-FILENAME orderdata)
+       (take orderdata 5))
+     )))
+
+
+#|
+
+(process)
+
+(process "RT1-8.txt")
+
+|#
