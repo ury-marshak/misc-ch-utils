@@ -31,7 +31,7 @@ And then order the filtered deck by "Due"
 (define OUT-FILENAME "RTH-order.txt")
 (define CHARACTER-FIELD-NUM 0)
 (define RTH-ID-FIELD-NUM 5)
-(define STUDY-ORDER-FIELD-NUM 14)
+(define STUDY-ORDER-FIELD-NUM 15) ;; Was 14 before adding "Elements" field
 
 
 
