@@ -1,10 +1,11 @@
 #lang racket/base
 
 (require racket/list)
-;; (require  racket/string)
+(require  racket/string)
 
 (require "rth-tsv.rkt")
 (require "utils.rkt")
+(require "pleco-format.rkt")
 
 (define IN-FILENAME "Remembering Traditional Hanzi 1+2.txt")
 (define OUT-FILENAME "RTH-fix1.csv")
@@ -44,7 +45,7 @@
 (define (remove-entities s)
   ;; (set! s (regexp-replace* #rx"&quot;" s "\""))
   (set! s (regexp-replace* #rx"&nbsp;" s " "))
-  s)
+  (string-trim s))
 
 (define-processor (remove-entities-from-keyword row)
   (let ([char (list-ref row CHARACTER-FIELD-NUM)]
@@ -53,6 +54,15 @@
       (unless (string=? keyword newkeyword)
         (printf "~a\n" keyword))
       (list char newkeyword)))  )
+
+(define-processor (strip-html-from-field row field-num)
+  (let ([char (list-ref row CHARACTER-FIELD-NUM)]
+        [fieldval (list-ref row field-num)])
+
+    (let ([newfieldval (string-trim (strip-HTML fieldval))])
+      (unless (string=? fieldval newfieldval)
+        (printf "~a\n" fieldval))
+      (list char newfieldval)))  )
 
 
 
@@ -72,3 +82,24 @@
     (for-each check-field
               (list RTH-ID-FIELD-NUM CHARACTER-FIELD-NUM KEYWORD-FIELD-NUM STUDY-ORDER-FIELD-NUM))
     (newline)))
+
+
+;;
+
+(define (find-non-empty)
+  (let ((data (read-RTH IN-FILENAME)))
+    (define (check-non-empty row)
+      (define (get-field fld-num)
+        (list-ref row fld-num))
+
+      (let ([fld (get-field KEYWORD-INFO-FIELD-NUM) ])
+        (unless (string=? fld "")
+          (printf "~a ~a ~a ~a"
+                  (get-field CHARACTER-FIELD-NUM)
+                  (get-field KEYWORD-FIELD-NUM)
+                  (get-field RTH-ID-FIELD-NUM)
+                  (get-field KEYWORD-INFO-FIELD-NUM))
+          (newline))))
+
+    (for-each check-non-empty data)
+    ))
