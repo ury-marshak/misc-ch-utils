@@ -2,7 +2,7 @@
 
 (require racket/list)
 (require  racket/string)
-(require "rth-tsv-reader.rkt")
+(require "rth-tsv.rkt")
 (require "pleco-format.rkt")
 
 ;;(require csv-writing)

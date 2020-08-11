@@ -1,9 +1,9 @@
 #lang racket/base
 
 (require csv-reading)
-;;(require csv-writing)
+(require csv-writing)
 
-(provide read-RTH
+(provide read-RTH write-RTH
          CHARACTER-FIELD-NUM KEYWORD-FIELD-NUM KEYWORD-INFO-FIELD-NUM
          PRIMITIVE-FIELD-NUM PRIMITIVE-STORY-FIELD-NUM
          RTH-ID-FIELD-NUM
@@ -45,8 +45,15 @@
     (lambda () (all-rows (current-input-port)))))
 
 
-(define (read-RTH [infilename IN-FILENAME])
+(define (read-RTH infilename)
   (read-file infilename))
 
 
-;;; ---
+;;; --- Writing
+
+(define (write-RTH outfilename data)
+  (let ((printing-params (make-csv-printing-params
+                          #:quotes-only-when-needed? #f)))
+    (with-output-to-file outfilename
+      (lambda () (display-table data (current-output-port) #:printing-params printing-params ))
+      #:exists 'replace)))
