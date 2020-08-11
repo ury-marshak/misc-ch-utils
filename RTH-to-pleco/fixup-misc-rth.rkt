@@ -4,6 +4,7 @@
 ;; (require  racket/string)
 
 (require "rth-tsv.rkt")
+(require "utils.rkt")
 
 (define IN-FILENAME "Remembering Traditional Hanzi 1+2.txt")
 (define OUT-FILENAME "RTH-fix1.csv")
@@ -57,15 +58,17 @@
 
 ;; check specified fields for possible duplicates,
 ;; print first duplicate if found
+
 (define (check-uniqueness)
   (let ((data (read-RTH IN-FILENAME)))
     (define (check-field fld-num)
-      (let ([dup-check (check-duplicates data
-                                         #:key (lambda (row)
-                                                 (list-ref row fld-num)))])
-        (when dup-check
-          (printf "~a" (list-ref dup-check fld-num)))))
+      (define (get-field row)
+        (list-ref row fld-num))
+      (let ([dups (all-duplicates data
+                                  #:key get-field)])
+        (when dups
+          (printf "~a" (map get-field dups)))))
 
     (for-each check-field
-              (list RTH-ID-FIELD-NUM CHARACTER-FIELD-NUM STUDY-ORDER-FIELD-NUM))
+              (list RTH-ID-FIELD-NUM CHARACTER-FIELD-NUM KEYWORD-FIELD-NUM STUDY-ORDER-FIELD-NUM))
     (newline)))
