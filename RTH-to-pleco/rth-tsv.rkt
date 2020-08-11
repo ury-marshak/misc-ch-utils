@@ -3,7 +3,7 @@
 (require csv-reading)
 (require csv-writing)
 
-(provide read-RTH write-RTH
+(provide read-RTH write-RTH write-RTH-csv
          CHARACTER-FIELD-NUM KEYWORD-FIELD-NUM KEYWORD-INFO-FIELD-NUM
          PRIMITIVE-FIELD-NUM PRIMITIVE-STORY-FIELD-NUM
          RTH-ID-FIELD-NUM
@@ -51,9 +51,16 @@
 
 ;;; --- Writing
 
-(define (write-RTH outfilename data)
+(define (write-RTH-csv outfilename data)
   (let ((printing-params (make-csv-printing-params
                           #:quotes-only-when-needed? #f)))
+    (with-output-to-file outfilename
+      (lambda () (display-table data (current-output-port) #:printing-params printing-params ))
+      #:exists 'replace)))
+
+
+(define (write-RTH outfilename data)
+  (let ((printing-params default-tsv-printing-params))
     (with-output-to-file outfilename
       (lambda () (display-table data (current-output-port) #:printing-params printing-params ))
       #:exists 'replace)))
