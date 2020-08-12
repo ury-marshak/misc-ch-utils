@@ -11,16 +11,6 @@
 (define IN-FILENAME "Remembering Traditional Hanzi 1+2.txt")
 (define OUT-FILENAME "RTH-el-pleco.txt")
 
-;; (define CHARACTER-FIELD-NUM 0)
-;; (define KEYWORD-FIELD-NUM 1)
-;; (define KEYWORD-INFO-FIELD-NUM 2)
-;; (define PRIMITIVE-FIELD-NUM 3)
-;; (define RTH-ID-FIELD-NUM 5)
-;; (define ELEMENTS-FIELD-NUM 7)
-;; (define STORY-FIELD-NUM 8)
-;; (define SIMPLIFIED-ID-FIELD-NUM 11)
-;; (define STUDY-ORDER-FIELD-NUM 15)
-
 
 (define USED-ELEMENTS-FIELD-NUM STORY-FIELD-NUM) ;; Change to ELEMENTS-FIELD-NUM when it's ready
 
@@ -41,11 +31,15 @@
         [tags (string-split (list-ref row TAGS-FIELD-NUM))]
         [primitive (list-ref row PRIMITIVE-FIELD-NUM)]
         [keyword (list-ref row KEYWORD-FIELD-NUM)]
+        [keyword-info (list-ref row KEYWORD-INFO-FIELD-NUM)]
         [lines '()])
     (define (push val) (set! lines (cons val lines)))
 
 
-    (push (format "~a ~a (~a)" rth-index (pleco:bold keyword) (choose-tag tags)) )
+    (let ([info-str (if (non-empty-string? keyword-info)
+                        (string-append-immutable " (" keyword-info ")")
+                        "")])
+     (push (format "~a ~a~a [~a]" rth-index (pleco:bold keyword) info-str (choose-tag tags)) ))
 
     ;;(push "")
 
