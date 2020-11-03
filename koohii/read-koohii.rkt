@@ -2,6 +2,7 @@
 
 (require racket/path)
 (require racket/list)
+(require racket/string)
 
 (require html-parsing)
 (require sxml/sxpath)
@@ -87,9 +88,24 @@
   (process-file "/Users/ury/work/misc-ch-utils/koohii/koohii/aphasiac2_01.html" #f))
 
 
+;; (define (trim-if-string s)
+;;   (if (string? s)
+;;       (string-trim s)
+;;       s))
+
+;; (define (trim-equal? a b)
+;;   (equal?/recur (trim-if-string a) (trim-if-string b) trim-equal?))
+
 (define (same-story s1 s2)
+  (define (trim-if-string s)
+    (if (string? s)
+        (string-trim s)
+        s))
+  (define (trimmed-equal? a b)
+    (equal?/recur (trim-if-string a) (trim-if-string b) trimmed-equal?))
+
   (and (string=? (story-hanzi s1) (story-hanzi s2))
-       (equal? (story-sxml-nodes s1) (story-sxml-nodes s2))))
+       (trimmed-equal? (story-sxml-nodes s1) (story-sxml-nodes s2))))
 
 
 (define (is-new-story stry stories-list)
@@ -100,7 +116,7 @@
 (define (add-to-hash curr-story ht)
   (hash-update! ht (story-hanzi curr-story)
                 (lambda (existing-stories)
-                  (printf "upd: ~a" existing-stories)
+                  ;; (printf "upd: ~a" existing-stories)
                   (if (is-new-story curr-story existing-stories)
                       (cons curr-story existing-stories)
                       existing-stories))
@@ -114,17 +130,74 @@
             (and ext (bytes=? ext #".html")))
           (directory-list dirpath #:build? #t)))
 
+
+(define stories-ht (make-parameter #f))
+
+
 (define (process-dir dirpath)
   (define html-files (get-html-files dirpath))
 
-  (set! html-files (take html-files 1 ))
+  ;; (set! html-files (take html-files 1 ))
 
   (let ((ht (make-hash)))
     (for ((html-file html-files))
+      (printf "processing: ~a\n" html-file)
       (process-file html-file
                     (lambda (story) (add-to-hash story ht))))
     ht))
 
+(define (add-stories-to-tsv dirpath)
+  (define ht (process-dir dirpath))
+  (parameterize ([stories-ht ht])
+    (process-RTH-tsv process-tsv-row)))
+
 
 (define (test-2)
   (process-dir "/Users/ury/work/misc-ch-utils/koohii/koohii/"))
+
+(define (test-3)
+  (add-stories-to-tsv "/Users/ury/work/misc-ch-utils/koohii/koohii/")
+  (println "done"))
+
+
+;;
+
+(require "../RTH-to-pleco/rth-tsv.rkt")
+
+(define IN-FILENAME "Remembering Traditional Hanzi 1+2.txt")
+(define OUT-FILENAME "RTH-fix1.csv")
+
+(define (process-RTH-tsv process-row (fname-in IN-FILENAME) (fname-out OUT-FILENAME) (take-num 18))
+  (let ((data (read-RTH fname-in)))
+    (let ((newdata (filter (lambda (x) x) (map process-row data))))
+      (write-RTH-csv fname-out newdata)
+      (take newdata take-num))))
+
+
+(define (get-html-stories-for-char char)
+  (define stories (hash-ref (stories-ht) char #f))
+  (if stories
+      (make-html-for-stories stories)
+      #f))
+
+
+(define (process-tsv-row row)
+  (let ([char (list-ref row CHARACTER-FIELD-NUM)])
+    (define other-stories (get-html-stories-for-char char))
+    ;; (unless o-s
+    ;;   (set! o-s ""))
+    (if other-stories
+        (list char other-stories)
+        #f)) )
+
+
+(define (make-html-for-stories stories)
+  (define wrapped-stories (for/fold ([acc '()]
+                                     #:result (reverse acc))
+                                    ([st (in-list stories)])
+                            (cons `(dd ,@(story-sxml-nodes st))
+                                  (cons `(dt ,(string-append-immutable (story-user st) ":"))
+                                        acc))  ))
+
+
+  (xexp->html `(dl ,@wrapped-stories)))
