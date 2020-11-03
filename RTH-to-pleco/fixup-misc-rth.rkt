@@ -14,9 +14,9 @@
 
 
 (define (process-file process-row (fname-in IN-FILENAME) (fname-out OUT-FILENAME) (take-num 18))
-  (let ((data (read-RTH IN-FILENAME)))
+  (let ((data (read-RTH fname-in)))
     (let ((newdata (map process-row data)))
-      (write-RTH-csv OUT-FILENAME newdata)
+      (write-RTH-csv fname-out newdata)
        (take newdata take-num))))
 
 
